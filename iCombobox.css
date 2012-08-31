@@ -34,7 +34,7 @@
     padding-right: 20px;
 }
 
-/* Чтобы в выпадающих списках не было боковых стрелок */
+/* delete from li background */
 li {
     background: none no-repeat scroll left center transparent;
     list-style: none outside none;
