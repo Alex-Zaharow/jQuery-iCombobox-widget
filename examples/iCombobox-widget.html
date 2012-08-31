@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="../jquery-ui-css/ui-lightness/jquery-ui-1.8.23.custom.css" type="text/css"/>
+    <title>jquery ui selectable</title>
+    <script src="../jquery/jquery-1.8.0.js"></script>
+    <script src="../jquery-ui/jquery-ui-1.8.23.custom.min.js"></script>
+    <style>
+    .ui-combobox {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .ui-combobox-toggle {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin-left: -1px;
+        padding: 0;
+        /* adjust styles for IE 6/7 */
+        *height: 1.7em;
+        *top: 0.1em;
+    }
+    
+    .ui-combobox-input {
+        margin: 0;
+        padding: 0.3em;
+        width: 500px;
+    }
+    
+    .ui-button {
+        cursor: pointer;
+        display: inline-block;
+        margin-right: 0.1em;
+        overflow: visible;
+        padding: 0;
+        position: absolute;
+        text-align: center;
+        text-decoration: none !important;
+    }
+    
+    .ui-autocomplete {
+        max-height: 300px;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: hidden;
+        /* add padding to account for vertical scrollbar */
+        padding-right: 20px;
+    }
+    </style>
+<script type="text/javascript">
+(function( $ ) 
+{
+    function split( val ) 
+    {
+        //val.replace(new RegExp("([, ])", "gim"), "\n$1\n")
+        var v = val.replace(new RegExp("([, ][ ]*)", "gim"), "\n$1\n").split( /\n/gi );
+    	return v;
+    }
+    
+    function extractLast( term ) 
+    {
+    	return split( term ).pop();
+    }
+    
+    $.widget( "ui.icombobox", 
+    {
+        options: {
+                   arrValues: []
+                 },
+        setOption: function(key, value) 
+                   {
+                        if (value != undefined) 
+                        {
+                          this.options[key] = value;
+                          this._render();
+                          return this;
+                        }
+                        else 
+                        {
+                          return this.options[key];
+                        }
+                   },
+       _create: function() 
+                {
+                    var input,
+                        self        = this,
+                        wrapper     = this.wrapper = $( "<span>" )
+                                                                .addClass( "ui-combobox" )
+                                                                .appendTo( self.element );
+                        var av = this.options.arrValues;
+    
+                    input = $( "<input>" )
+                                            .appendTo( wrapper )
+                                            .addClass( "ui-state-default ui-combobox-input" )
+                                            .autocomplete(
+                                                            {
+                                                                delay: 0,
+                                                                minLength: 0,
+                                                                source: function( request, response ) 
+                                                                        {
+                                                        					// delegate back to autocomplete, but extract the last term
+                                                        					response( $.ui.autocomplete.filter(av, extractLast( request.term ) ) );
+                                                        				},
+                                                                select: function( event, ui ) 
+                                                                        {
+                                                                            var terms = split( this.value );
+                                                        					// remove the current input
+                                                        					terms.pop();
+                                                        					// add the selected item
+                                                        					terms.push( ui.item.value );
+                                                        					// add placeholder to get the comma-and-space at the end
+                                                        					terms.push( "" );
+                                                        					this.value = terms.join( "" );
+                                                        					return false;
+                                                                        },
+                                                				focus: function() {
+                                                					// prevent value inserted on focus
+                                                					return false;
+                                                				}
+                                                                /*
+                                                                change: function( event, ui ) 
+                                                                        {
+                                                                            if ( !ui.item ) {
+                                                                                var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( $(this).val() ) + "$", "i" ),
+                                                                                    valid = false;
+                                                                                select.children( "option" ).each(function() {
+                                                                                    if ( $( this ).text().match( matcher ) ) {
+                                                                                        this.selected = valid = true;
+                                                                                        return false;
+                                                                                    }
+                                                                                });
+                                                                                if ( !valid ) {
+                                                                                    // remove invalid value, as it didn't match anything
+                                                                                    $( this ).val( "" );
+                                                                                    select.val( "" );
+                                                                                    input.data( "autocomplete" ).term = "";
+                                                                                    return false;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                //*/
+                                                     })
+                                            .addClass( "ui-widget ui-widget-content ui-corner-left" );
+    
+                    input.data( "autocomplete" )._renderItem =  function( ul, item ) 
+                                                                {
+                                                                    return $( "<li></li>" )
+                                                                        .data( "item.autocomplete", item )
+                                                                        .append( "<a>" + item.label + "</a>" )
+                                                                        .appendTo( ul );
+                                                                };
+    
+                    $( "<a>" )
+                        .attr( "tabIndex", -1 )
+                        .attr( "title", "Show All Items" )
+                        .appendTo( wrapper )
+                        .button({
+                            icons: {
+                                primary: "ui-icon-triangle-1-s"
+                            },
+                            text: false
+                        })
+                        .removeClass( "ui-corner-all" )
+                        .addClass( "ui-corner-right ui-combobox-toggle" )
+                        .click( function() 
+                                {
+                                    // close if already visible
+                                    if ( input.autocomplete( "widget" ).is( ":visible" ) ) 
+                                    {
+                                        input.autocomplete( "close" );
+                                        return;
+                                    }
+            
+                                    // work around a bug (likely same cause as #5265)
+                                    $( this ).blur();
+            
+                                    // pass empty string as value to search for, displaying all results
+                                    input.autocomplete( "search", "" );
+                                    input.focus();
+                                });
+                },
+
+        destroy: function() {
+            this.wrapper.remove();
+            this.element.show();
+            $.Widget.prototype.destroy.call( this );
+        }
+    });
+    $(function() 
+    {
+        $( "#iComboLanguage" ).icombobox({
+                                            arrValues: ["ActionScript","AppleScript","Asp","BASIC","C","C++","Clojure","COBOL","ColdFusion","Erlang","Fortran","Groovy","Haskell","Java","JavaScript","Lisp","Perl","PHP","Python","Ruby","Scala","Scheme"]
+                                         });
+        $( "#iComboDog" ).icombobox({
+                                      arrValues: ["Белый гриб", "Вешенка обыкновенная", "Гриб-зонтик пёстрый", "Ежовик жёлтый", "Зеленушка", "Колпак кольчатый", "Лангерманния гигантская", "Лисичка обыкновенная", "Маслёнок обыкновенный", "Навозник белый", "Опёнок луговой", "Подберёзовик", "Подосиновик", "Полёвка цилиндрическая", "Рыжик настоящий", "Сыроежка зеленоватая", "Сыроежка сине-жёлтая", "Трутовик серно-жёлтый", "Шампиньон", "Трюфель", "Цезарский гриб", "Сморчок обыкновенный", "сморчок конический"]
+                                    });
+    });
+})( jQuery );
+
+</script>
+</head>
+<body>
+<div id="iComboLanguage"></div>
+<p>Некоторый текст</p>
+<div id="iComboDog"></div>
+</body>
+</html>

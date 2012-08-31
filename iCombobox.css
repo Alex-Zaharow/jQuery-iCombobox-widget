@@ -1,0 +1,43 @@
+.ui-icombobox {
+    position: relative;
+    display: inline-block;
+}
+
+.ui-icombobox-toggle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin-left: -1px;
+    padding: 0;
+    /* adjust styles for IE 6/7 */
+    *height: 1.7em;
+    *top: 0.1em;
+}
+
+.ui-ibutton {
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 0.1em;
+    overflow: visible;
+    padding: 0;
+    position: relative;
+    text-align: center;
+    text-decoration: none !important;
+}
+
+.ui-autocomplete {
+    max-height: 300px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+    /* add padding to account for vertical scrollbar */
+    padding-right: 20px;
+}
+
+/* Чтобы в выпадающих списках не было боковых стрелок */
+li {
+    background: none no-repeat scroll left center transparent;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0 0 0 14px;
+}

@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="../jquery-ui-css/ui-lightness/jquery-ui-1.8.23.custom.css" type="text/css"/>
+    <link rel="stylesheet" href="../iCombobox.css" type="text/css"/>
+    <title>jquery ui selectable</title>
+    <script src="../jquery/jquery-1.8.0.js"></script>
+    <script src="../jquery-ui/jquery-ui-1.8.23.custom.min.js"></script>
+<style>
+    /*set user width of input field*/
+    .ui-combobox-input {
+        margin: 0;
+        padding: 0.3em;
+        width: 500px;
+    }
+</style>
+<script src="../iCombobox.js"></script>
+<script type="text/javascript">
+$(function() 
+{
+    $( "#iComboLanguage" ).icombobox({
+                                        arrValues: ["ActionScript","AppleScript","Asp","BASIC","C","C++","Clojure","COBOL","ColdFusion","Erlang","Fortran","Groovy","Haskell","Java","JavaScript","Lisp","Perl","PHP","Python","Ruby","Scala","Scheme"]
+                                      , replace: false
+                                     });
+    $( "#iComboDog" ).icombobox({
+                                  arrValues: ["Белый гриб", "Вешенка обыкновенная", "Гриб-зонтик пёстрый", "Ежовик жёлтый", "Зеленушка", "Колпак кольчатый", "Лангерманния гигантская", "Лисичка обыкновенная", "Маслёнок обыкновенный", "Навозник белый", "Опёнок луговой", "Подберёзовик", "Подосиновик", "Полёвка цилиндрическая", "Рыжик настоящий", "Сыроежка зеленоватая", "Сыроежка сине-жёлтая", "Трутовик серно-жёлтый", "Шампиньон", "Трюфель", "Цезарский гриб", "Сморчок обыкновенный", "сморчок конический"]
+                                });
+});
+</script>
+</head>
+<body>
+<div id="iComboLanguage"></div>
+<p>Некоторый текст</p>
+<div id="iComboDog"></div>
+</body>
+</html>

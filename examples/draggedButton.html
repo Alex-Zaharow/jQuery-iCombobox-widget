@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>SlickGrid example 1: Basic grid</title>
+  <link rel="stylesheet" href="jquery-ui-css/ui-lightness/jquery-ui-1.8.23.custom.css" type="text/css"/>
+  <script src="jquery/jquery-1.8.0.js"></script>
+  <script src="jquery-ui/jquery-ui-1.8.23.custom.min.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+
+(function ($) 
+  {
+      $.fn.extend({
+                      funcNewText:  function(txt)
+                                    {
+                                        var ih = $(this).html();
+                                            $(this).html(ih+txt);
+                                    }
+               });
+  }
+)(jQuery);
+
+$(document).ready(function()
+{
+//  init();
+  $("#idDraggable1").draggable({axis:"x", cursor:"move"});
+  $("#idDraggable1").resizable({});
+  $("#ta").resizable({});
+  $("#idDraggable2").draggable({axis:"x,y", cursor:"move"});
+  $('#datepicker').datepicker();
+  $("#btn").button();
+  $("#btn").click(function()
+                  {
+                    $("#diag").dialog({
+                                        modal:true,
+                                        close: function(event, ui)
+                                               {
+                                                    alert("close...");
+                                               }
+                                      });
+                  }
+                 );
+  $("#addText").button().click(
+                                function()
+                                {
+                                    $("#idToAddText1, #idToAddText2, #idToAddText3").funcNewText("added??? ");
+                                }
+                              );
+  $("#selectable01").selectable();
+});
+</script>
+<div id="idDraggable1"  style="border: 1px solid blue;width:200px;height:200px;display:hidden;overflow:auto;"  class="ui-widget ui-corner-all">
+<p>draggable1</p>
+<div id="idDraggable2" style="border: 1px solid red;width:100px;">inner draggable2</div>
+</div>
+<input type="button" value="text" id="btn"/>
+<br/><input type='text' id='datepicker'/>
+<br/><div id="diag" style="dislpay:invisible;">Я диалог????</div>
+<br/><textarea id="ta" style="width:200px;height:200px;">text</textarea>
+<br>
+    <input type="button" value="addText" id="addText"/>
+    <div id="idToAddText1" style="border: 1px solid red">1 </div>
+    <div id="idToAddText2" style="border: 1px solid blue">2 </div>
+    <div id="idToAddText3" style="border: 1px solid green">3 </div>
+    
+<br/>
+Выбор:
+<div id="selectable01">
+		<div>ActionScript</div>
+		<div>AppleScript</div>
+		<div>Asp</div>
+		<div>BASIC</div>
+		<div>C</div>
+</div>
+</body>
+</html>
